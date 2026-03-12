@@ -1,0 +1,55 @@
+name: CCWidgetApp
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGNING_ALLOWED: "NO"
+
+targets:
+
+  # ── Основное приложение ────────────────────────────────────────────
+  CCWidgetApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: CCWidgetApp
+        excludes:
+          - "SharedModels.swift"   # включаем явно ниже чтобы не дублировать
+      - path: CCWidgetApp/SharedModels.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ccwidgetapp
+        INFOPLIST_FILE: CCWidgetApp/Info.plist
+    dependencies:
+      - target: ControlCenterExtension
+    entitlements:
+      path: CCWidgetApp/CCWidgetApp.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.example.ccwidgetapp
+
+  # ── Control Center Extension ───────────────────────────────────────
+  ControlCenterExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - ControlCenterExtension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.ccwidgetapp.ccextension
+        INFOPLIST_FILE: ControlCenterExtension/Info.plist
+    entitlements:
+      path: ControlCenterExtension/CCExtension.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.example.ccwidgetapp
